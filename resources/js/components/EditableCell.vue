@@ -35,7 +35,7 @@
                     );
             },
             inputModel() {
-                return this.row.new ? this.row: this.editConsumer;
+                return this.row.new ? this.row : this.editConsumer;
             }
         }
     }

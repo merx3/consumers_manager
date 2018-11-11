@@ -64,7 +64,6 @@ const consumersStore = new Vuex.Store({
         }
     },
     actions: {
-        // TODO: add header, footer
         fetch: ({commit, state}) => {
             state.disableInputs = true;
             return axios.get('/consumers/all')
@@ -72,7 +71,8 @@ const consumersStore = new Vuex.Store({
                     state.disableInputs = false;
                     commit('set', resp.data.consumers);
                     state.validationRules = resp.data.validator;
-                });
+                })
+                .catch(() => state.disableInputs = false);
         },
         delete: ({state}, id) => {
             state.disableInputs = true;
@@ -85,6 +85,10 @@ const consumersStore = new Vuex.Store({
                         state.consumers = state.consumers.filter(c => c.id !== id);
                         return true;
                     }
+                })
+                .catch(err => {
+                    state.disableInputs = false;
+                    return Promise.reject(err);
                 });
         },
         save: ({state}, consumer) => {
@@ -106,10 +110,18 @@ const consumersStore = new Vuex.Store({
             state.disableInputs = true;
             if (!consumer.id) {
                 return axios.post('/consumers', consumer)
-                    .then(response => handleResponse(response));
+                    .then(response => handleResponse(response))
+                    .catch(err => {
+                        state.disableInputs = false;
+                        return Promise.reject(err);
+                    });
             } else {
                 return axios.put('/consumers/' + consumer.id, consumer)
-                    .then(response => handleResponse(response));
+                    .then(response => handleResponse(response))
+                    .catch(err => {
+                        state.disableInputs = false;
+                        return Promise.reject(err);
+                    });
             }
         }
     }

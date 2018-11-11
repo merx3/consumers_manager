@@ -1,9 +1,7 @@
 <template>
     <div id="app">
         <el-row type="flex">
-            <div style="width: 40em;
-                       margin-left:auto;
-                       margin-right:auto;">
+            <div class="table-actions centered">
                 <el-col :offset="2" :span="8" >
                     <table-search
                         v-bind:disable-inputs="$store.getters.disableInputs"
@@ -28,9 +26,7 @@
                 empty-text="No consumers found"
                 ref="consumersTable"
                 sortable="custom"
-                style="width: 45em;
-                       margin-left:auto;
-                       margin-right:auto;">
+                class="consumers-table centered">
                 <el-table-column
                     label="#"
                     prop="id"
@@ -98,7 +94,7 @@
                             v-if="scope.row.new"
                             size="medium"
                             :disabled="$store.getters.disableInputs"
-                            style="padding: 0.8em;"
+                            class="add-button"
                             @click="handleAdd(scope.row)">Add User</el-button>
                     </template>
                 </el-table-column>
@@ -146,31 +142,25 @@
             }
         },
         methods: {
-            sortById(a, b) {
+            genericSort(a, b, prop) {
                 let sortOrder = this.sort.split('_')[1];
                 if (b.new === true) {
                     return sortOrder === 'descending';
                 }
-                if (a.id > b.id) {
+                if (a[prop] > b[prop]) {
                     return 1;
                 }
-                if (a.id < b.id) {
+                if (a[prop] < b[prop]) {
                     return -1;
                 }
                 return 0;
+
+            },
+            sortById(a, b) {
+                return this.genericSort(a, b, 'id');
             },
             sortByName(a, b) {
-                let sortOrder = this.sort.split('_')[1];
-                if (b.new === true) {
-                    return sortOrder === 'descending';
-                }
-                if (a.name > b.name) {
-                    return 1;
-                }
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 0;
+                return this.genericSort(a, b, 'name');
             },
             handleDelete(consumer){
                 this.$store.dispatch('delete', consumer.id)
@@ -198,15 +188,6 @@
                             type: 'error'
                         });
                     });;
-            },
-            tableRowClassName(row, index) {
-                if (index === this.active) {
-                    return 'consumer-young';
-                }
-                if (index === this.active) {
-                    return 'consumer-old';
-                }
-                return '';
             },
             filterTable(text){
                 this.filter = text.toLowerCase();
@@ -277,7 +258,7 @@
         font-family: @font;
     }
 
-    table, input::placeholder, li > span{
+    table, input::placeholder, li > span {
         font-family: @font;
         font-weight: @font-weight;
         opacity: 1;
@@ -285,5 +266,22 @@
 
     .cell i {
         cursor: pointer;
+    }
+
+    .centered {
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .table-actions {
+        width: 40em;
+    }
+
+    .consumers-table {
+        width: 45em;
+    }
+
+    .add-button {
+        padding: 0.8em;
     }
 </style>
