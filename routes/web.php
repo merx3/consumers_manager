@@ -17,4 +17,4 @@ Route::get('/', function () {
 
 
 Route::get('consumers/all', 'ConsumersManager@getAll');
-Route::resource('consumers', 'ConsumersManager', ['as' => 'consumers']);
+Route::resource('consumers', 'ConsumersManager');

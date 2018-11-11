@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="flex-center links">
-                    <a href="{{ route('consumers.manager.index') }}">Consumers Manager</a>
+                    <a href="{{ route('consumers.index') }}">Consumers Manager</a>
                 </div>
             </div>
         </div>
